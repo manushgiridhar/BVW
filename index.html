@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+<title>Login</title>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-  <script src="firebase_config.js"></script>
+<script src="firebase_config.js"></script>
 </head>
 
 <body>
-  <h2>Login</h2>
 
-  <input id="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
+<h2>Login</h2>
 
-  <button onclick="login()">Login</button>
-  <button onclick="signup()">Signup</button>
+<input id="email" placeholder="Email"><br><br>
 
-  <script src="auth.js"></script>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+<button onclick="signup()">Signup</button>
+
+<script src="auth.js"></script>
+
 </body>
 </html>

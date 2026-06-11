@@ -1,78 +1,103 @@
-let currentUser;
-
 auth.onAuthStateChanged(user => {
+
   if (!user) {
     window.location.href = "index.html";
     return;
   }
 
-  currentUser = user;
-  loadUserData(user.uid);
+  loadUser(user.uid);
 });
 
-function loadUserData(uid) {
-  db.ref("users/" + uid).on("value", snap => {
+function loadUser(uid) {
+
+  db.ref("users/" + uid)
+  .on("value", snap => {
+
     const u = snap.val();
-    renderUnits(uid, u);
+
+    render(uid, u);
   });
 }
 
-function renderUnits(uid, u) {
-  const div = document.getElementById("units");
+function render(uid, u) {
+
+  const div =
+  document.getElementById("units");
+
   div.innerHTML = "";
 
-  // BOREWELL
-  for (let i = 1; i <= u.borewellCount; i++) {
+  for (let i = 1; i <= (u.borewellCount || 0); i++) {
+
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','b${i}')">B${i}</button>
-    `;
+    <button onclick="toggleUnit('${uid}','b${i}')">
+    B${i}
+    </button>`;
   }
 
-  // WELL
-  for (let i = 1; i <= u.wellCount; i++) {
+  div.innerHTML += "<br><br>";
+
+  for (let i = 1; i <= (u.wellCount || 0); i++) {
+
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','w${i}')">W${i}</button>
-    `;
+    <button onclick="toggleUnit('${uid}','w${i}')">
+    W${i}
+    </button>`;
   }
 
-  // VALVES
-  for (let i = 1; i <= u.valveCount; i++) {
+  div.innerHTML += "<br><br>";
+
+  for (let i = 1; i <= (u.valveCount || 0); i++) {
+
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','v${i}')">V${i}</button>
-    `;
+    <button onclick="toggleValve('${uid}','v${i}')">
+    V${i}
+    </button>`;
   }
 }
 
+function toggleValve(uid, valve) {
+
+  const path =
+  "users/" + uid + "/states/" + valve;
+
+  db.ref(path).once("value", snap => {
+
+    db.ref(path).set(!snap.val());
+  });
+}
+
 function toggleUnit(uid, unit) {
-  db.ref("users/" + uid).once("value", snap => {
+
+  db.ref("users/" + uid)
+  .once("value")
+  .then(snap => {
+
     const u = snap.val();
 
-    const boreValves = u.valveAssignments.borewell;
-    const wellValves = u.valveAssignments.well;
+    const assigned =
+      u.unitValveAssignments?.[unit] || [];
 
-    // CHECK RULES
-    if (unit.startsWith("b")) {
-      const ok = boreValves.every(v => true); // simplified ON check
+    const allOn =
+      assigned.every(v =>
+        u.states?.[v] === true
+      );
 
-      if (!ok) {
-        alert("Turn ON all borewell valves first!");
-        return;
-      }
+    if (!allOn) {
+
+      alert(
+      "Turn ON all assigned valves first");
+      return;
     }
 
-    if (unit.startsWith("w")) {
-      const ok = wellValves.every(v => true);
+    const path =
+    "users/" + uid + "/states/" + unit;
 
-      if (!ok) {
-        alert("Turn ON all well valves first!");
-        return;
-      }
-    }
+    db.ref(path)
+    .once("value")
+    .then(s => {
 
-    const path = "users/" + uid + "/states/" + unit;
-
-    db.ref(path).once("value", s => {
       db.ref(path).set(!s.val());
     });
+
   });
 }
