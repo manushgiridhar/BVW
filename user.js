@@ -37,53 +37,52 @@ function render(uid, u) {
 
   for (let i = 1; i <= (u.borewellCount || 0); i++) {
 
-    const state =
-      u.states && u.states["b" + i]
-      ? "🟢 ON"
-      : "🔴 OFF";
+    const unit = "b" + i;
+    const state = u.states && u.states[unit] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','b${i}')">
-        B${i}<br>${state}
-      </button>
+      <div style="margin:10px 0">
+        <b>B${i}</b>
+        <button onclick="toggleUnit('${uid}','${unit}')">
+          ${state}
+        </button>
+      </div>
     `;
   }
-
-  div.innerHTML += "<br><br>";
 
   // Wells
   div.innerHTML += "<h3>Wells</h3>";
 
   for (let i = 1; i <= (u.wellCount || 0); i++) {
 
-    const state =
-      u.states && u.states["w" + i]
-      ? "🟢 ON"
-      : "🔴 OFF";
+    const unit = "w" + i;
+    const state = u.states && u.states[unit] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','w${i}')">
-        W${i}<br>${state}
-      </button>
+      <div style="margin:10px 0">
+        <b>W${i}</b>
+        <button onclick="toggleUnit('${uid}','${unit}')">
+          ${state}
+        </button>
+      </div>
     `;
   }
-
-  div.innerHTML += "<br><br>";
 
   // Valves
   div.innerHTML += "<h3>Valves</h3>";
 
   for (let i = 1; i <= (u.valveCount || 0); i++) {
 
-    const state =
-      u.states && u.states["v" + i]
-      ? "🟢 ON"
-      : "🔴 OFF";
+    const valve = "v" + i;
+    const state = u.states && u.states[valve] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleValve('${uid}','v${i}')">
-        V${i}<br>${state}
-      </button>
+      <div style="margin:10px 0">
+        <b>V${i}</b>
+        <button onclick="toggleValve('${uid}','${valve}')">
+          ${state}
+        </button>
+      </div>
     `;
   }
 }
