@@ -10,10 +10,17 @@ auth.onAuthStateChanged(user => {
 
 function loadUser(uid) {
 
-  db.ref("users/" + uid)
-  .on("value", snap => {
+  db.ref("users/" + uid).on("value", snap => {
 
     const u = snap.val();
+
+    console.log("User Data:", u);
+
+    if (!u) {
+      document.getElementById("units").innerHTML =
+        "<h3>No user data found in Firebase</h3>";
+      return;
+    }
 
     render(uid, u);
   });
@@ -25,51 +32,57 @@ function render(uid, u) {
 
   div.innerHTML = "";
 
-  // BOREWELLS
+  // Borewells
   div.innerHTML += "<h3>Borewells</h3>";
 
-  for (let i = 1; i <= (u.borewellCount || 0); i++) {
+  const borewellCount = Number(u.borewellCount || 0);
 
-    const unit = "b" + i;
-    const state = u.states?.[unit] ? "ON" : "OFF";
+  for (let i = 1; i <= borewellCount; i++) {
+
+    const state =
+      u.states && u.states["b" + i] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','${unit}')">
-        B${i} - ${state}
+      <button onclick="toggleUnit('${uid}','b${i}')">
+        B${i} (${state})
       </button>
     `;
   }
 
   div.innerHTML += "<br><br>";
 
-  // WELLS
+  // Wells
   div.innerHTML += "<h3>Wells</h3>";
 
-  for (let i = 1; i <= (u.wellCount || 0); i++) {
+  const wellCount = Number(u.wellCount || 0);
 
-    const unit = "w" + i;
-    const state = u.states?.[unit] ? "ON" : "OFF";
+  for (let i = 1; i <= wellCount; i++) {
+
+    const state =
+      u.states && u.states["w" + i] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleUnit('${uid}','${unit}')">
-        W${i} - ${state}
+      <button onclick="toggleUnit('${uid}','w${i}')">
+        W${i} (${state})
       </button>
     `;
   }
 
   div.innerHTML += "<br><br>";
 
-  // VALVES
+  // Valves
   div.innerHTML += "<h3>Valves</h3>";
 
-  for (let i = 1; i <= (u.valveCount || 0); i++) {
+  const valveCount = Number(u.valveCount || 0);
 
-    const valve = "v" + i;
-    const state = u.states?.[valve] ? "ON" : "OFF";
+  for (let i = 1; i <= valveCount; i++) {
+
+    const state =
+      u.states && u.states["v" + i] ? "ON" : "OFF";
 
     div.innerHTML += `
-      <button onclick="toggleValve('${uid}','${valve}')">
-        V${i} - ${state}
+      <button onclick="toggleValve('${uid}','v${i}')">
+        V${i} (${state})
       </button>
     `;
   }
@@ -77,10 +90,9 @@ function render(uid, u) {
 
 function toggleValve(uid, valve) {
 
-  const path =
-  "users/" + uid + "/states/" + valve;
+  const path = "users/" + uid + "/states/" + valve;
 
-  db.ref(path).once("value", snap => {
+  db.ref(path).once("value").then(snap => {
 
     db.ref(path).set(!snap.val());
   });
@@ -88,36 +100,30 @@ function toggleValve(uid, valve) {
 
 function toggleUnit(uid, unit) {
 
-  db.ref("users/" + uid)
-  .once("value")
-  .then(snap => {
+  db.ref("users/" + uid).once("value").then(snap => {
 
     const u = snap.val();
 
     const assigned =
-      u.unitValveAssignments?.[unit] || [];
+      (u.unitValveAssignments &&
+       u.unitValveAssignments[unit]) || [];
 
-    const allOn =
-      assigned.every(v =>
-        u.states?.[v] === true
-      );
+    const allOn = assigned.every(v =>
+      u.states &&
+      u.states[v] === true
+    );
 
     if (!allOn) {
-
-      alert(
-      "Turn ON all assigned valves first");
+      alert("Turn ON all assigned valves first");
       return;
     }
 
     const path =
-    "users/" + uid + "/states/" + unit;
+      "users/" + uid + "/states/" + unit;
 
-    db.ref(path)
-    .once("value")
-    .then(s => {
+    db.ref(path).once("value").then(s => {
 
       db.ref(path).set(!s.val());
     });
-
   });
 }
