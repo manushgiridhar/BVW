@@ -35,16 +35,16 @@ function render(uid, u) {
   // Borewells
   div.innerHTML += "<h3>Borewells</h3>";
 
-  const borewellCount = Number(u.borewellCount || 0);
-
-  for (let i = 1; i <= borewellCount; i++) {
+  for (let i = 1; i <= (u.borewellCount || 0); i++) {
 
     const state =
-      u.states && u.states["b" + i] ? "ON" : "OFF";
+      u.states && u.states["b" + i]
+      ? "🟢 ON"
+      : "🔴 OFF";
 
     div.innerHTML += `
       <button onclick="toggleUnit('${uid}','b${i}')">
-        B${i} (${state})
+        B${i}<br>${state}
       </button>
     `;
   }
@@ -54,16 +54,16 @@ function render(uid, u) {
   // Wells
   div.innerHTML += "<h3>Wells</h3>";
 
-  const wellCount = Number(u.wellCount || 0);
-
-  for (let i = 1; i <= wellCount; i++) {
+  for (let i = 1; i <= (u.wellCount || 0); i++) {
 
     const state =
-      u.states && u.states["w" + i] ? "ON" : "OFF";
+      u.states && u.states["w" + i]
+      ? "🟢 ON"
+      : "🔴 OFF";
 
     div.innerHTML += `
       <button onclick="toggleUnit('${uid}','w${i}')">
-        W${i} (${state})
+        W${i}<br>${state}
       </button>
     `;
   }
@@ -73,16 +73,16 @@ function render(uid, u) {
   // Valves
   div.innerHTML += "<h3>Valves</h3>";
 
-  const valveCount = Number(u.valveCount || 0);
-
-  for (let i = 1; i <= valveCount; i++) {
+  for (let i = 1; i <= (u.valveCount || 0); i++) {
 
     const state =
-      u.states && u.states["v" + i] ? "ON" : "OFF";
+      u.states && u.states["v" + i]
+      ? "🟢 ON"
+      : "🔴 OFF";
 
     div.innerHTML += `
       <button onclick="toggleValve('${uid}','v${i}')">
-        V${i} (${state})
+        V${i}<br>${state}
       </button>
     `;
   }
