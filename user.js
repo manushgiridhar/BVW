@@ -21,37 +21,57 @@ function loadUser(uid) {
 
 function render(uid, u) {
 
-  const div =
-  document.getElementById("units");
+  const div = document.getElementById("units");
 
   div.innerHTML = "";
 
+  // BOREWELLS
+  div.innerHTML += "<h3>Borewells</h3>";
+
   for (let i = 1; i <= (u.borewellCount || 0); i++) {
 
+    const unit = "b" + i;
+    const state = u.states?.[unit] ? "ON" : "OFF";
+
     div.innerHTML += `
-    <button onclick="toggleUnit('${uid}','b${i}')">
-    B${i}
-    </button>`;
+      <button onclick="toggleUnit('${uid}','${unit}')">
+        B${i} - ${state}
+      </button>
+    `;
   }
 
   div.innerHTML += "<br><br>";
+
+  // WELLS
+  div.innerHTML += "<h3>Wells</h3>";
 
   for (let i = 1; i <= (u.wellCount || 0); i++) {
 
+    const unit = "w" + i;
+    const state = u.states?.[unit] ? "ON" : "OFF";
+
     div.innerHTML += `
-    <button onclick="toggleUnit('${uid}','w${i}')">
-    W${i}
-    </button>`;
+      <button onclick="toggleUnit('${uid}','${unit}')">
+        W${i} - ${state}
+      </button>
+    `;
   }
 
   div.innerHTML += "<br><br>";
 
+  // VALVES
+  div.innerHTML += "<h3>Valves</h3>";
+
   for (let i = 1; i <= (u.valveCount || 0); i++) {
 
+    const valve = "v" + i;
+    const state = u.states?.[valve] ? "ON" : "OFF";
+
     div.innerHTML += `
-    <button onclick="toggleValve('${uid}','v${i}')">
-    V${i}
-    </button>`;
+      <button onclick="toggleValve('${uid}','${valve}')">
+        V${i} - ${state}
+      </button>
+    `;
   }
 }
 
