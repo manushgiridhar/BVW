@@ -5,10 +5,12 @@ function signup() {
   const password = document.getElementById("password").value;
 
   auth.createUserWithEmailAndPassword(email, password)
-    .then((res) => {
+    .then(async (res) => {
 
-      return db.ref("users/" + res.user.uid).set({
-        email,
+      console.log("User created:", res.user.uid);
+
+      await db.ref("users/" + res.user.uid).set({
+        email: email,
         borewellCount: 0,
         wellCount: 0,
         valveCount: 0,
@@ -16,12 +18,15 @@ function signup() {
         states: {}
       });
 
-    })
-    .then(() => {
-      alert("Signup Successful");
+      console.log("Database write successful");
+
+      alert("Signup successful");
       window.location.href = "user.html";
     })
-    .catch(err => alert(err.message));
+    .catch(err => {
+      console.error("ERROR:", err);
+      alert(err.message);
+    });
 }
 
 function login() {
