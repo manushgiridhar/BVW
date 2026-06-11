@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyBF-bnOqs-rX4-PjlMV_6ligsYKPC9IEX0",
+  apiKey: "AIzaSyBF-bnOqs-rX4-PjlVM_6ligsYKPC9IEX0",
   authDomain: "esp-relay-control-6488c.firebaseapp.com",
   databaseURL: "https://esp-relay-control-6488c-default-rtdb.firebaseio.com",
   projectId: "esp-relay-control-6488c",
